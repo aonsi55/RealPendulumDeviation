@@ -1,0 +1,15 @@
+T = 2*Pi*Sqrt[1/9.81];
+g = 9.81; L = 1; y =.; m =.;
+deviation = 0;
+kk = 0.01;
+While[Abs[deviation] <=  2, {
+  ind = 1 + (kk - 0.001)*100; 
+  soly = NDSolve[{y''[t] == -(g/L)*Sin[y[t]], y[0] == kk, y'[0] == 0},
+     y, {t, 0, 4}]; 
+  py = Plot[y[t] /. soly, {t, 0, 4}, PlotLegends -> "Expressions"]; 
+  points = First[Cases[py, Line[x_] :> x, All]]; 
+  ymaxind = FindPeaks[points[[All, 2]]]; 
+  xmaxind = ymaxind[[All, 1]]; 
+  diffa = Differences[Table[points[[i, 1]], {i, xmaxind}]]; 
+  deviation = (T - diffa[[-2]])/diffa[[-2]]*100; 
+  Print[kk]; Print[deviation]}; kk = kk + 0.01]
